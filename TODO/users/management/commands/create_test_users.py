@@ -39,8 +39,8 @@ class Command(BaseCommand):
                 new_user.save()
                 # удаляем экземпляр, чтобы не висел в памяти
                 del new_user
-                print(f'new {self.users[user]["name"]} was created. \nlogin: {self.users[user]["name"]}\npassword: {self.users[user]["password"]}')
+                print(f'new {self.users[user]["name"]} was created. \nlogin: {self.users[user]["name"]}\npassword: {self.users[user]["password"]}\n')
             except Exception as e:
                 #обработка исключения при повторном создании тестовых юзеров и суперюзера
                 print(e)
-                print(f'{self.users[user]["name"]} exists. \nlogin: {self.users[user]["name"]}\npassword: {self.users[user]["password"]}')
+                print(f'{self.users[user]["name"]} exists. \nlogin: {self.users[user]["name"]}\npassword: {self.users[user]["password"]}\n')
