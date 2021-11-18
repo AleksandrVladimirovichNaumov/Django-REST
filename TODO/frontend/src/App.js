@@ -40,18 +40,31 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    List of users
-                </header>
 
-                <div className="App-content">
-                    <UserList users={this.state.users}/>
+            <div className="parent">
+                <div className="div1">
+                    <p>TODO: list of users</p>
                 </div>
-                <footer>
-                    <p>TODO application</p>
-                </footer>
+                <div className="div2">
+                    <span>
+                        <p>Menu</p>
+                        <p><a href="#">option 1</a></p>
+                        <p><a href="#">option 2</a></p>
+                        <p><a href="#">option 3</a></p>
+
+                    </span>
+                </div>
+                <div className="div3">
+                    <span>
+                        <UserList users={this.state.users}/>
+                    </span>
+
+                </div>
+                <div className="div4">
+                    <p>TODO ltd.</p>
+                </div>
             </div>
+
 
         )
             ;
