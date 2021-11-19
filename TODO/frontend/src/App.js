@@ -1,13 +1,19 @@
 import React from 'react';
 import './App.css';
 import UserList from "./components/User";
+import MenuList from "./components/Menu";
 import axios from "axios";
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'users': []
+            'users': [],
+            'menu_items': [
+                'option 1',
+                'option 2',
+                'option 3',
+            ]
         }
     }
 
@@ -15,7 +21,7 @@ class App extends React.Component {
         axios.get('http://127.0.0.1:8000/api/users/').then(
             response => {
                 const users = response.data
-                console.log(users)
+
                 this.setState(
                     {
                         'users': users
@@ -47,10 +53,8 @@ class App extends React.Component {
                 </div>
                 <div className="div2">
                     <span>
-                        <p>Menu</p>
-                        <p><a href="#">option 1</a></p>
-                        <p><a href="#">option 2</a></p>
-                        <p><a href="#">option 3</a></p>
+                        <MenuList menu_items={this.state.menu_items}/>
+
 
                     </span>
                 </div>
@@ -72,3 +76,4 @@ class App extends React.Component {
 }
 
 export default App;
+
