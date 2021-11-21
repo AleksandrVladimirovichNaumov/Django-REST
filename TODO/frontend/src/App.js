@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import UserList from "./components/User";
 import MenuList from "./components/Menu";
+import FooterContent from "./components/Footer";
 import axios from "axios";
 
 class App extends React.Component {
@@ -13,7 +14,8 @@ class App extends React.Component {
                 'option 1',
                 'option 2',
                 'option 3',
-            ]
+            ],
+            'footer_items':['TODO ltd.', '2021']
         }
     }
 
@@ -65,7 +67,7 @@ class App extends React.Component {
 
                 </div>
                 <div className="div4">
-                    <p>TODO ltd.</p>
+                    <FooterContent footer_items={this.state.footer_items}/>
                 </div>
             </div>
 
