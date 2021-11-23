@@ -1,6 +1,8 @@
+import djangorestframework_camel_case
 from django.shortcuts import render
 
 # Create your views here.
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.viewsets import ModelViewSet
 
@@ -15,6 +17,6 @@ class ProjectModelViewSet(ModelViewSet):
 
 
 class ToDoModelViewSet(ModelViewSet):
-
+    renderer_classes = [CamelCaseJSONRenderer]
     queryset = ToDo.objects.all()
     serializer_class = ToDoModelSerializer
