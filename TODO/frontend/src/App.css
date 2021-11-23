@@ -1,0 +1,107 @@
+.parent {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 2fr 6fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 100vh;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 4;
+    text-align: center;
+    margin-top: 40px;
+    border-bottom-style: inset;
+    border-bottom-width: 1px;
+    border-bottom-color: black;
+    height: min-content;
+    font-size: 24px;
+
+
+}
+
+
+.div2 {
+    grid-area: 2 / 1 / 3 / 2;
+    text-align: center;
+}
+
+.div2 span {
+    background: white;
+    display: inline-block;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 3.4px 3.4px 2.7px rgba(0, 0, 0, 0.022),
+    8.7px 8.7px 6.9px rgba(0, 0, 0, 0.031),
+    17.7px 17.7px 14.2px rgba(0, 0, 0, 0.039),
+    36.5px 36.5px 29.2px rgba(0, 0, 0, 0.048),
+    100px 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.div2 p {
+
+
+    margin: 50px;
+
+}
+
+.div2 a {
+
+    color: dimgrey;
+
+
+}
+
+.div3 {
+    grid-area: 2 / 2 / 3 / 3;
+    text-align: center;
+}
+
+
+.div3 span {
+    background: white;
+    display: inline-block;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 3.4px 3.4px 2.7px rgba(0, 0, 0, 0.022),
+    8.7px 8.7px 6.9px rgba(0, 0, 0, 0.031),
+    17.7px 17.7px 14.2px rgba(0, 0, 0, 0.039),
+    36.5px 36.5px 29.2px rgba(0, 0, 0, 0.048),
+    100px 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.div3 table {
+    background: white;
+    margin: 50px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: dimgrey;
+    border-collapse: collapse;
+
+}
+
+.div3 th, td {
+
+    padding-left: 15px;
+    padding-right: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: dimgrey;
+}
+
+.div4 {
+    grid-area: 3 / 1 / 4 / 4;
+    text-align: center;
+    position: relative;
+    min-height: 100%;
+    border-top-style: inset;
+    border-top-width: 1px;
+    border-top-color: black;
+}
+
+
+
+
+
+
+
