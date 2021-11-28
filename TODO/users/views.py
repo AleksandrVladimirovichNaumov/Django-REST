@@ -1,10 +1,17 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from .models import User
 from .serializers import UserModelSerializer
 
 
 # Create your views here.
 
-class UserModelViewSet(ModelViewSet):
+# class UserModelViewSet(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserModelSerializer
+
+class UserCustomViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
