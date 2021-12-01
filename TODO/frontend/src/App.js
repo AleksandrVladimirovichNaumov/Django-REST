@@ -4,6 +4,9 @@ import UserList from "./components/User";
 import MenuList from "./components/Menu";
 import FooterContent from "./components/Footer";
 import axios from "axios";
+import {BrowserRouter, HashRouter, Route, Router, Routes} from "react-router-dom";
+import ProjectList from "./components/Project";
+import ToDoList from "./components/ToDo";
 
 class App extends React.Component {
     constructor(props) {
@@ -15,7 +18,9 @@ class App extends React.Component {
                 'option 2',
                 'option 3',
             ],
-            'footer_items':['TODO ltd.', '2021']
+            'footer_items': ['TODO ltd.', '2021'],
+            'projects': [],
+            'todos': []
         }
     }
 
@@ -31,19 +36,32 @@ class App extends React.Component {
                 )
             }
         ).catch(error => console.log(error))
-        // const users = [
-        //     {
-        //         'username': 'Alex',
-        //         'first_name': 'Alexander',
-        //         'last_name': 'Naumov',
-        //         'email': 'AlexanderNaumov@TODO.com'
-        //     }
-        // ]
-        // this.setState(
-        //     {
-        //         'users':users
-        //     }
-        // )
+        axios.get('http://127.0.0.1:8000/api/projects/').then(
+            response => {
+                console.log(response)
+                const projects = response.data
+                console.log(projects)
+
+                this.setState(
+                    {
+                        'projects': projects
+                    }
+                )
+            }
+        ).catch(error => console.log(error))
+        axios.get('http://127.0.0.1:8000/api/todos/').then(
+            response => {
+                console.log(response)
+                const todos = response.data
+                console.log(todos)
+                this.setState(
+                    {
+                        'todos': todos
+                    }
+                )
+            }
+        ).catch(error => console.log(error))
+
     }
 
     render() {
@@ -62,7 +80,14 @@ class App extends React.Component {
                 </div>
                 <div className="div3">
                     <span>
-                        <UserList users={this.state.users}/>
+                        <BrowserRouter>
+
+
+                                <Route exact path='/' component={() => <UserList users={this.state.users}/>}/>
+                                <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects}/>}/>
+                                <Route exact path='/todos/' component={() => <ToDoList todos={this.state.todos}/>}/>
+
+                        </BrowserRouter>
                     </span>
 
                 </div>
@@ -76,6 +101,7 @@ class App extends React.Component {
             ;
     }
 }
+
 
 export default App;
 

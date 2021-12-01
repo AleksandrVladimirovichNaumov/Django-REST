@@ -26,12 +26,12 @@ router = DefaultRouter()
 router.register('projects', ProjectModelViewSet, basename='project')
 router.register('todos', ToDoModelViewSet, basename='todo')
 router.register('users', UserCustomViewSet, basename='user')
-router.register('after', ToDoFilterModelViewSet)
-router.register('before', ToDoFilterModelViewSet)
+# router.register('after', ToDoFilterModelViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
-    path('filters/', include(router.urls))
+    # path('filters/', include(router.urls))
 ]
