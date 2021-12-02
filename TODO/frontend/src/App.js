@@ -4,9 +4,11 @@ import UserList from "./components/User";
 import MenuList from "./components/Menu";
 import FooterContent from "./components/Footer";
 import axios from "axios";
-import {BrowserRouter, HashRouter, Route, Router, Routes, Link} from "react-router-dom";
+import {BrowserRouter, HashRouter, Route, Router, Routes, Link, Switch, Redirect} from "react-router-dom";
 import ProjectList from "./components/Project";
 import ToDoList from "./components/ToDo";
+import NotFound from "./components/NotFound";
+import ProjectDetailsList from "./components/ProjectDetails";
 
 class App extends React.Component {
     constructor(props) {
@@ -14,7 +16,7 @@ class App extends React.Component {
         this.state = {
             'users': [],
             'menu_items': [
-                ['Users', '/'],
+                ['Users', '/users'],
                 ['Projects', '/projects'],
                 ['ToDos', '/todos'],
             ],
@@ -38,9 +40,9 @@ class App extends React.Component {
         ).catch(error => console.log(error))
         axios.get('http://127.0.0.1:8000/api/projects/').then(
             response => {
-                console.log(response)
+
                 const projects = response.data
-                console.log(projects)
+
 
                 this.setState(
                     {
@@ -51,9 +53,9 @@ class App extends React.Component {
         ).catch(error => console.log(error))
         axios.get('http://127.0.0.1:8000/api/todos/').then(
             response => {
-                console.log(response)
+
                 const todos = response.data
-                console.log(todos)
+
                 this.setState(
                     {
                         'todos': todos
@@ -68,34 +70,43 @@ class App extends React.Component {
         return (
 
             <div className="parent">
-                <div className="div1">
-                    <p>TODO:</p>
-                </div>
-                <div className="div2">
+                <BrowserRouter>
+                    <div className="div1">
+                        <p>TODO:</p>
+                    </div>
+                    <div className="div2">
                     <span>
-                        <BrowserRouter>
+
                             <MenuList menu_items={this.state.menu_items}/>
-                        </BrowserRouter>
+
 
                     </span>
-                </div>
-                <div className="div3">
+                    </div>
+                    <div className="div3">
                     <span>
-                        <BrowserRouter>
 
 
-                                <Route exact path='/' component={() => <UserList users={this.state.users}/>}/>
-                                <Route exact path='/projects/'
+                            <Switch>
+                                <Route exact path='/users' component={() => <UserList users={this.state.users}/>}/>
+                                <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}/>}/>
-                                <Route exact path='/todos/' component={() => <ToDoList todos={this.state.todos}/>}/>
+                                <Route exact path='/todos' component={() => <ToDoList todos={this.state.todos}/>}/>
+                                <Route path='/projects/details/:id'>
+                                    <ProjectDetailsList projects={this.state.projects}/>
+                                </Route>
 
-                        </BrowserRouter>
+                                <Redirect from='/' to='/users'/>
+
+                                <Route component={NotFound}/>
+                            </Switch>
+
                     </span>
 
-                </div>
-                <div className="div4">
-                    <FooterContent footer_items={this.state.footer_items}/>
-                </div>
+                    </div>
+                    <div className="div4">
+                        <FooterContent footer_items={this.state.footer_items}/>
+                    </div>
+                </BrowserRouter>
             </div>
 
 
