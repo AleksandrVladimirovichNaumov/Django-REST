@@ -4,7 +4,7 @@ import UserList from "./components/User";
 import MenuList from "./components/Menu";
 import FooterContent from "./components/Footer";
 import axios from "axios";
-import {BrowserRouter, HashRouter, Route, Router, Routes} from "react-router-dom";
+import {BrowserRouter, HashRouter, Route, Router, Routes, Link} from "react-router-dom";
 import ProjectList from "./components/Project";
 import ToDoList from "./components/ToDo";
 
@@ -14,9 +14,9 @@ class App extends React.Component {
         this.state = {
             'users': [],
             'menu_items': [
-                'option 1',
-                'option 2',
-                'option 3',
+                ['Users', '/'],
+                ['Projects', '/projects'],
+                ['ToDos', '/todos'],
             ],
             'footer_items': ['TODO ltd.', '2021'],
             'projects': [],
@@ -69,12 +69,13 @@ class App extends React.Component {
 
             <div className="parent">
                 <div className="div1">
-                    <p>TODO: list of users</p>
+                    <p>TODO:</p>
                 </div>
                 <div className="div2">
                     <span>
-                        <MenuList menu_items={this.state.menu_items}/>
-
+                        <BrowserRouter>
+                            <MenuList menu_items={this.state.menu_items}/>
+                        </BrowserRouter>
 
                     </span>
                 </div>
@@ -84,7 +85,8 @@ class App extends React.Component {
 
 
                                 <Route exact path='/' component={() => <UserList users={this.state.users}/>}/>
-                                <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects}/>}/>
+                                <Route exact path='/projects/'
+                                       component={() => <ProjectList projects={this.state.projects}/>}/>
                                 <Route exact path='/todos/' component={() => <ToDoList todos={this.state.todos}/>}/>
 
                         </BrowserRouter>
