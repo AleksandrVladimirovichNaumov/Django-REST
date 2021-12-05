@@ -5,7 +5,7 @@ from projects.models import Project, ToDo
 from users.serializers import UserModelSerializer
 
 
-class ProjectModelSerializer(HyperlinkedModelSerializer):
+class ProjectModelSerializer(ModelSerializer):
 
     working_group = UserModelSerializer(many=True)
 

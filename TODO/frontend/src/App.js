@@ -4,6 +4,11 @@ import UserList from "./components/User";
 import MenuList from "./components/Menu";
 import FooterContent from "./components/Footer";
 import axios from "axios";
+import {BrowserRouter, HashRouter, Route, Router, Routes, Link, Switch, Redirect} from "react-router-dom";
+import ProjectList from "./components/Project";
+import ToDoList from "./components/ToDo";
+import NotFound from "./components/NotFound";
+import ProjectDetailsList from "./components/ProjectDetails";
 
 class App extends React.Component {
     constructor(props) {
@@ -11,11 +16,13 @@ class App extends React.Component {
         this.state = {
             'users': [],
             'menu_items': [
-                'option 1',
-                'option 2',
-                'option 3',
+                ['Users', '/users'],
+                ['Projects', '/projects'],
+                ['ToDos', '/todos'],
             ],
-            'footer_items':['TODO ltd.', '2021']
+            'footer_items': ['TODO ltd.', '2021'],
+            'projects': [],
+            'todos': []
         }
     }
 
@@ -31,44 +38,75 @@ class App extends React.Component {
                 )
             }
         ).catch(error => console.log(error))
-        // const users = [
-        //     {
-        //         'username': 'Alex',
-        //         'first_name': 'Alexander',
-        //         'last_name': 'Naumov',
-        //         'email': 'AlexanderNaumov@TODO.com'
-        //     }
-        // ]
-        // this.setState(
-        //     {
-        //         'users':users
-        //     }
-        // )
+        axios.get('http://127.0.0.1:8000/api/projects/').then(
+            response => {
+
+                const projects = response.data
+
+
+                this.setState(
+                    {
+                        'projects': projects
+                    }
+                )
+            }
+        ).catch(error => console.log(error))
+        axios.get('http://127.0.0.1:8000/api/todos/').then(
+            response => {
+
+                const todos = response.data
+
+                this.setState(
+                    {
+                        'todos': todos
+                    }
+                )
+            }
+        ).catch(error => console.log(error))
+
     }
 
     render() {
         return (
 
             <div className="parent">
-                <div className="div1">
-                    <p>TODO: list of users</p>
-                </div>
-                <div className="div2">
+                <BrowserRouter>
+                    <div className="div1">
+                        <p>TODO:</p>
+                    </div>
+                    <div className="div2">
                     <span>
-                        <MenuList menu_items={this.state.menu_items}/>
+
+                            <MenuList menu_items={this.state.menu_items}/>
 
 
                     </span>
-                </div>
-                <div className="div3">
+                    </div>
+                    <div className="div3">
                     <span>
-                        <UserList users={this.state.users}/>
+
+
+                            <Switch>
+                                <Route exact path='/users' component={() => <UserList users={this.state.users}/>}/>
+                                <Route exact path='/projects'
+                                       component={() => <ProjectList projects={this.state.projects}/>}/>
+                                <Route exact path='/todos' component={() => <ToDoList todos={this.state.todos}/>}/>
+                                <Route path='/projects/details/:id'>
+                                    <ProjectDetailsList projects={this.state.projects}/>
+                                </Route>
+
+                                <Redirect from='/' to='/users'/>
+
+                                <Route component={NotFound}/>
+                            </Switch>
+
                     </span>
 
-                </div>
-                <div className="div4">
-                    <FooterContent footer_items={this.state.footer_items}/>
-                </div>
+                    </div>
+                    <div className="div4">
+                        <FooterContent footer_items={this.state.footer_items}/>
+                    </div>
+                </BrowserRouter>
             </div>
 
 
@@ -76,6 +114,7 @@ class App extends React.Component {
             ;
     }
 }
+
 
 export default App;
 

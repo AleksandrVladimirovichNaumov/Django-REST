@@ -26,16 +26,16 @@ class ProjectModelViewSet(ModelViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
-    pagination_class = ProjectLimitOffsetPagination
-    filterset_class = ProjectFilter
+    # pagination_class = ProjectLimitOffsetPagination
+    # filterset_class = ProjectFilter
 
 
 class ToDoModelViewSet(ModelViewSet):
     renderer_classes = [CamelCaseJSONRenderer, BrowsableAPIRenderer]
     queryset = ToDo.objects.all()
     serializer_class = ToDoModelSerializer
-    pagination_class = ToDoLimitOffsetPagination
-    filterset_class = ToDoFilter
+    # pagination_class = ToDoLimitOffsetPagination
+    # filterset_class = ToDoFilter
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
