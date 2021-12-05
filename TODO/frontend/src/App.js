@@ -9,6 +9,7 @@ import ProjectList from "./components/Project";
 import ToDoList from "./components/ToDo";
 import NotFound from "./components/NotFound";
 import ProjectDetailsList from "./components/ProjectDetails";
+import LoginForm from "./components/LoginForm";
 
 class App extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class App extends React.Component {
                 ['Users', '/users'],
                 ['Projects', '/projects'],
                 ['ToDos', '/todos'],
+                ['Login', '/login'],
             ],
             'footer_items': ['TODO ltd.', '2021'],
             'projects': [],
@@ -75,15 +77,15 @@ class App extends React.Component {
                         <p>TODO:</p>
                     </div>
                     <div className="div2">
-                    <span>
+                        <span>
 
                             <MenuList menu_items={this.state.menu_items}/>
 
 
-                    </span>
+                        </span>
                     </div>
                     <div className="div3">
-                    <span>
+                        <span>
 
 
                             <Switch>
@@ -91,30 +93,32 @@ class App extends React.Component {
                                 <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}/>}/>
                                 <Route exact path='/todos' component={() => <ToDoList todos={this.state.todos}/>}/>
+                                <Route exact path='/login' component={() => <LoginForm/>}/>
                                 <Route path='/projects/details/:id'>
                                     <ProjectDetailsList projects={this.state.projects}/>
                                 </Route>
+
 
                                 <Redirect from='/' to='/users'/>
 
                                 <Route component={NotFound}/>
                             </Switch>
 
-                    </span>
+                                    </span>
 
-                    </div>
-                    <div className="div4">
-                        <FooterContent footer_items={this.state.footer_items}/>
-                    </div>
-                </BrowserRouter>
-            </div>
-
-
-        )
-            ;
-    }
-}
+                                    </div>
+                                    <div className="div4">
+                                    <FooterContent footer_items={this.state.footer_items}/>
+                                    </div>
+                                    </BrowserRouter>
+                                    </div>
 
 
-export default App;
+                                    )
+                                    ;
+                                }
+                                }
+
+
+                                export default App;
 
