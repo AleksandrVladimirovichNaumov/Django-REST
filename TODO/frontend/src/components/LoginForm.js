@@ -13,13 +13,14 @@ class LoginForm extends React.Component {
     handleChange(event) {
         this.setState(
             {
-                [event.taget.name]: event.target.value
+                [event.target.name]: event.target.value
             }
         )
     }
 
     handleSubmit(event) {
         console.log(this.state.login + '  ' + this.state.password)
+        event.preventDefault()
     }
 
     render() {
