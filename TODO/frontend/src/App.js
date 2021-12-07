@@ -10,8 +10,11 @@ import ToDoList from "./components/ToDo";
 import NotFound from "./components/NotFound";
 import ProjectDetailsList from "./components/ProjectDetails";
 import LoginForm from "./components/LoginForm";
+import Cookies from "universal-cookie/lib";
+
 
 class App extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -20,15 +23,31 @@ class App extends React.Component {
                 ['Users', '/users'],
                 ['Projects', '/projects'],
                 ['ToDos', '/todos'],
-                ['Login', '/login'],
             ],
             'footer_items': ['TODO ltd.', '2021'],
             'projects': [],
-            'todos': []
+            'todos': [],
+            'token': '',
+            'username': ''
         }
     }
 
-    componentDidMount() {
+    set_token(token) {
+        const cookie = new Cookies()
+        cookie.set('token', token)
+        this.setState({'token': token})
+    }
+
+    is_auth() {
+        return !!this.state.token
+    }
+
+    logout() {
+        this.set_token('')
+        this.setState({'username':''})
+    }
+
+    load_data() {
         axios.get('http://127.0.0.1:8000/api/users/').then(
             response => {
                 const users = response.data
@@ -65,6 +84,34 @@ class App extends React.Component {
                 )
             }
         ).catch(error => console.log(error))
+    }
+
+    get_token_from_storage() {
+        const cookie = new Cookies()
+        let token = cookie.get('token')
+        this.setState({'token': token})
+    }
+
+    get_token(username, password) {
+
+        this.setState({'username':username})
+        let data;
+        data = {
+            username: username,
+            password: password
+        }
+        axios.post('http://127.0.0.1:8000/api-token-auth/', data).then(
+            response => {
+                this.set_token(response.data['token'])
+                console.log(response.data)
+
+            }
+        ).catch(error => alert(error))
+    }
+
+    componentDidMount() {
+        this.get_token_from_storage()
+        this.load_data()
 
     }
 
@@ -80,7 +127,11 @@ class App extends React.Component {
                         <span>
 
                             <MenuList menu_items={this.state.menu_items}/>
-
+                            {this.is_auth()
+                                ? <p>
+                                    <button onClick={() => this.logout()}>Logout</button>
+                                </p>
+                                : <p><Link to='/login'>Login</Link></p>}
 
                         </span>
                     </div>
@@ -93,7 +144,13 @@ class App extends React.Component {
                                 <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}/>}/>
                                 <Route exact path='/todos' component={() => <ToDoList todos={this.state.todos}/>}/>
-                                <Route exact path='/login' component={() => <LoginForm/>}/>
+                                {!this.is_auth()
+                                ? <Route exact path='/login' component={() => <LoginForm
+                                    get_token={(username, password) => this.get_token(username, password)}/>}/>
+                                    : <div className="div2"><span> You are logged as {this.state['username']}</span></div>
+                                }
+                                {/*<Route exact path='/login' component={() => <LoginForm*/}
+                                {/*    get_token={(username, password) => this.get_token(username, password)}/>}/>*/}
                                 <Route path='/projects/details/:id'>
                                     <ProjectDetailsList projects={this.state.projects}/>
                                 </Route>
@@ -106,19 +163,19 @@ class App extends React.Component {
 
                                     </span>
 
-                                    </div>
-                                    <div className="div4">
-                                    <FooterContent footer_items={this.state.footer_items}/>
-                                    </div>
-                                    </BrowserRouter>
-                                    </div>
+                    </div>
+                    <div className="div4">
+                        <FooterContent footer_items={this.state.footer_items}/>
+                    </div>
+                </BrowserRouter>
+            </div>
 
 
-                                    )
-                                    ;
-                                }
-                                }
+        )
+            ;
+    }
+}
 
 
-                                export default App;
+export default App;
 

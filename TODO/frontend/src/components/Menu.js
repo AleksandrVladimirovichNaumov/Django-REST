@@ -1,5 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import App from '../App';
+
 
 
 const MenuList = ({menu_items}) => {
@@ -7,7 +9,9 @@ const MenuList = ({menu_items}) => {
 
     // console.log(Menu.props)
     for (let i = 0; i < menu_items.length; i++) {
-        Menu.push(<p><Link to={menu_items[i][1]}>{menu_items[i][0]}</Link></p>);
+
+            Menu.push(<p><Link to={menu_items[i][1]}>{menu_items[i][0]}</Link></p>);
+
         // Menu.push(<p><a href="#">{menu_items[i]}</a></p>);
     }
     // console.log(Menu)
