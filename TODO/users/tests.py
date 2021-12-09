@@ -45,3 +45,9 @@ class TestUserViewSet(TestCase):
         client = APIClient()
         response = client.get(f'{self.url}{user.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestPalindrome(APISimpleTestCase):
+    def test_palindrome(self):
+        palindrome = 'аргентинаманитнегра'
+        self.assertEqual(palindrome, palindrome[::-1])
