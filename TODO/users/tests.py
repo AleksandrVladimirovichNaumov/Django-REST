@@ -3,9 +3,10 @@ from django.test import TestCase
 from mixer.auto import mixer
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APIClient, APISimpleTestCase, APITestCase
-
+from rest_framework.test import RequestsClient
 from .views import UserCustomViewSet
 from django.contrib.auth import get_user_model
+from requests.auth import HTTPBasicAuth
 
 
 # Create your tests here.
@@ -40,7 +41,7 @@ class TestUserViewSet(TestCase):
     def test_user_confirmation(self):
         # так как AUTH_USER_MODEL является кастомной моделью, надо создать модель User
         User = get_user_model()
-        #user = User.objects.create_user(username='test_user_for_client', email='test_user_for_client@fara.com')
+        # user = User.objects.create_user(username='test_user_for_client', email='test_user_for_client@fara.com')
         user = mixer.blend(User)
         client = APIClient()
         response = client.get(f'{self.url}{user.id}/')
@@ -49,7 +50,7 @@ class TestUserViewSet(TestCase):
     def test_user_login(self):
         User = get_user_model()
         User.objects.create_user(username='test_user_for_client', email='test_user_for_client@fara.com',
-                                        password='Password1!')
+                                 password='Password1!')
         client = APIClient()
         response = client.login(username='test_user_for_client', password='Password1!')
         self.assertEqual(response, True)
@@ -66,8 +67,9 @@ class TestUserViewSet2(APITestCase):
 
     def setUp(self) -> None:
         self.User = get_user_model()
-        self.user = self.User.objects.create_user(username='test_user_for_client', email='test_user_for_client@fara.com',
-                                            password='Password1!')
+        self.user = self.User.objects.create_user(username='test_user_for_client',
+                                                  email='test_user_for_client@fara.com',
+                                                  password='Password1!')
 
         self.url = '/api/users/'
         self.repeats = 50
@@ -90,4 +92,12 @@ class TestUserViewSet2(APITestCase):
                                               password='Password2!')
         self.client.login(username='test_user2_for_client', password='Password2!')
         response = self.client.get(f'{self.url}{user2.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestLiveUserViewSet(APITestCase):
+
+    def test_life_get(self):
+        client = RequestsClient()
+        response = client.get('http://127.0.0.1:8000/api/users/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
