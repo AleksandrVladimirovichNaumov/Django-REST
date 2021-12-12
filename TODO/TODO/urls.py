@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from projects.views import ProjectModelViewSet, ToDoModelViewSet, ToDoFilterModelViewSet
 # from users.views import UserModelViewSet
-from users.views import UserCustomViewSet
+from users.views import UserCustomViewSet, UserCustomViewSet2
 
 router = DefaultRouter()
 # router.register('users', UserModelViewSet)
@@ -38,5 +38,6 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/<str:version>/users/', UserCustomViewSet2.as_view({'get': 'list'}))
     # path('filters/', include(router.urls))
 ]
