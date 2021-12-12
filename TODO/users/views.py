@@ -20,6 +20,7 @@ class UserCustomViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Cr
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
 
+#добавил отдельный класс, чтобы ссылка из router'a осталась рабочей
 class UserCustomViewSet2(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     # serializer_class = UserModelSerializer
@@ -30,5 +31,6 @@ class UserCustomViewSet2(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, C
             return UserModelSerializer2
         elif self.request.version == '0.1':
             return UserModelSerializer
+        #404 как контент API работает только с версиями через URLS и через QueryParameter
         else:
             raise Http404
