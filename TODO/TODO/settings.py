@@ -149,10 +149,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_VERSIONING_CLASS':
-    # 'rest_framework.versioning.URLPathVersioning'
-        'rest_framework.versioning.NamespaceVersioning',
-    # 'rest_framework.versioning.QueryParameterVersioning'
-    # 'rest_framework.versioning.AcceptHeaderVersioning',
+        # 'rest_framework.versioning.URLPathVersioning'
+    #     'rest_framework.versioning.NamespaceVersioning',
+    #     'rest_framework.versioning.QueryParameterVersioning'
+        'rest_framework.versioning.AcceptHeaderVersioning',
 
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 3,

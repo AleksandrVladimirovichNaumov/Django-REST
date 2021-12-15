@@ -29,7 +29,7 @@ from users.views import UserCustomViewSet, UserCustomViewSet2
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Library",
+        title="ToDo",
         default_version='0.1',
         description="Documentation to out project",
         contact=openapi.Contact(email="admin@admin.local"),
@@ -55,10 +55,14 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # versioning by urls
-    # path('api/<str:version>/users/', UserCustomViewSet2.as_view({'get': 'list'}))
+    # path('api/<str:version>/users/', UserCustomViewSet2.as_view({'get': 'list'})),
+
     # versioning by namespace
-    path('api/0.1/users/', include('users.urls', namespace='0.1')),
-    path('api/0.2/users/', include('users.urls', namespace='0.2')),
+    # path('api/0.1/users/', include('users.urls', namespace='0.1')),
+    # path('api/0.2/users/', include('users.urls', namespace='0.2')),
+
+    # versioning by queryset
+    path('api/version/users/', UserCustomViewSet2.as_view({'get': 'list'})),
     # path('filters/', include(router.urls))
 
     path(r'swagger/<str:format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
