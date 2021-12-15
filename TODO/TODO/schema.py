@@ -27,7 +27,9 @@ class Query(graphene.ObjectType):
     all_projects = graphene.List(ProjectType)
     all_todos = graphene.List(ToDoType)
     all_users = graphene.List(UserType)
-    project_by_todo = graphene.List(ToDoType, todo_id=graphene.Int(required=False))
+    project_by_todo = graphene.List(ProjectType, todo_id=graphene.Int(required=False))
+    todos_by_project = graphene.List(ToDoType, project_id=graphene.Int(required=False))
+    active_todos_by_assigned_user = graphene.List(ToDoType, user_id=graphene.Int(required=False))
 
     def resolve_all_todos(root, info):
         return ToDo.objects.all()
@@ -40,32 +42,106 @@ class Query(graphene.ObjectType):
 
     def resolve_project_by_todo(self, info, todo_id=None):
         """
-        to test okease send graphqi request below
-
+        для проверки
         {
-          projectByTodo(todoId:1) {
+          projectByTodo(todoId:1){
             id
             name
-            isActive
-            createdBy{
+            gitLink
+            workingGroup{
               username
-            }
-            createDatetime
-            updateDatetime
-            project{
-              id
-              name
-              workingGroup{
-                username
-              }
             }
           }
         }
         """
         if todo_id:
-            return ToDo.objects.filter(id=todo_id)
+            todo = ToDo.objects.get(id=todo_id)
+            return Project.objects.filter(id=todo.project_id)
+        else:
+            return Project.objects.all()
+
+    def resolve_todos_by_project(self, info, project_id=None):
+        """
+        для проверки
+        {
+          todosByProject(projectId: 1) {
+            id
+            name
+            description
+            createDatetime
+            createdBy{
+              username
+            }
+            updateDatetime
+          }
+        }
+        """
+        if project_id:
+            return ToDo.objects.filter(project=project_id)
+        else:
+            return ToDo.objects.all()
+
+    def resolve_active_todos_by_assigned_user(self, info, user_id=None):
+        """
+        для проверки
+
+        """
+        if user_id:
+            return ToDo.objects.filter(is_active=True, assigned_to=user_id)
         else:
             return ToDo.objects.all()
 
 
-schema = graphene.Schema(query=Query)
+
+class ToDoMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID()
+        name = graphene.String()
+        description = graphene.String()
+        is_active = graphene.Boolean()
+        assigned_to = graphene.ID()
+
+
+    todo = graphene.Field(ToDoType)
+
+    @classmethod
+    def mutate(cls, root, info, id, is_active, name=None, desription=None, assigned_to=None):
+        """
+        Для проверки
+        mutation updateTodo{
+          updateTodo(id: 1, isActive: false, name: "TODO1_GraphQL", assignedTo: 50){
+            todo{
+              id
+              name
+              description
+              assignedTo{
+                id
+                username
+              }
+              isActive
+            }
+          }
+        }
+
+        """
+        todo = ToDo.objects.get(pk=id)
+        if is_active != None:
+            todo.is_active = is_active
+        if name != None:
+            todo.name = name
+        if desription != None:
+            todo.description = desription
+        if assigned_to != None:
+            todo.assigned_to = User.objects.get(pk=assigned_to)
+        todo.save()
+        return ToDoMutation(todo=todo)
+
+
+class Mutation(graphene.ObjectType):
+    update_todo = ToDoMutation.Field()
+
+
+
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
