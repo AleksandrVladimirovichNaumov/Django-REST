@@ -105,7 +105,7 @@ class ToDoUpdateMutation(graphene.Mutation):
     todo = graphene.Field(ToDoType)
 
     @classmethod
-    def mutate(cls, root, info, id, is_active, name=None, desription=None, assigned_to=None):
+    def mutate(cls, root, info, id, is_active=None, name=None, desription=None, assigned_to=None):
         """
         Для проверки
         mutation updateTodo{
