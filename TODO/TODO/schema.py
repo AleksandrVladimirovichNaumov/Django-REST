@@ -1,4 +1,5 @@
 import graphene
+from django.utils.timezone import now
 from graphene_django import DjangoObjectType
 
 from projects.models import Project, ToDo
@@ -92,15 +93,14 @@ class Query(graphene.ObjectType):
             return ToDo.objects.all()
 
 
-
-class ToDoMutation(graphene.Mutation):
+class ToDoUpdateMutation(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
         name = graphene.String()
         description = graphene.String()
         is_active = graphene.Boolean()
         assigned_to = graphene.ID()
-
+        update_datetime = graphene.DateTime()
 
     todo = graphene.Field(ToDoType)
 
@@ -114,6 +114,7 @@ class ToDoMutation(graphene.Mutation):
               id
               name
               description
+              updateDatetime
               assignedTo{
                 id
                 username
@@ -133,15 +134,98 @@ class ToDoMutation(graphene.Mutation):
             todo.description = desription
         if assigned_to != None:
             todo.assigned_to = User.objects.get(pk=assigned_to)
+        todo.update_datetime = now()
         todo.save()
-        return ToDoMutation(todo=todo)
+        return ToDoUpdateMutation(todo=todo)
+
+
+class ToDoCreateMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID()
+        name = graphene.String()
+        description = graphene.String()
+        is_active = graphene.Boolean()
+        project_id = graphene.ID()
+        assigned_to_id = graphene.ID()
+        created_by_id = graphene.ID()
+        update_datetime = graphene.DateTime()
+        create_datetime = graphene.DateTime()
+
+    todo = graphene.Field(ToDoType)
+
+    @classmethod
+    def mutate(cls, root, info, name, created_by_id, project_id, description=None, assigned_to_id=None):
+        """
+        Для проверки
+        mutation createTodo{
+          createTodo(name: "created_TODO1_GraphQL", createdById: 50, projectId:1){
+            todo{
+              id
+              name
+              description
+              updateDatetime
+              assignedTo{
+                id
+                username
+              }
+              createdBy{
+                id
+                username
+              }
+              project{
+                id
+                name
+              }
+              isActive
+            }
+          }
+        }
+
+        """
+
+        created_by = User.objects.get(pk=created_by_id)
+        if description is None:
+            description = 'Please add your description here.'
+        if assigned_to_id is None:
+            assigned_to = created_by
+        else:
+            assigned_to = User.objects.get(pk=assigned_to_id)
+
+        todo = ToDo.objects.create(name=name, description=description, is_active=True, created_by=created_by,
+                                   assigned_to=assigned_to, update_datetime=now(), create_datetime=now(),
+                                   project_id=project_id)
+        return ToDoCreateMutation(todo=todo)
+
+
+class ToDoDeleteMutation(graphene.Mutation):
+    class Arguments:
+        todo_id = graphene.ID()
+
+    todo = graphene.List(ToDoType)
+
+    @classmethod
+    def mutate(cls, root, info, todo_id):
+        """
+        для проверки
+            mutation deleteTodo{
+              deleteTodo(todoId:1){
+                todo{
+                  id
+                  name
+                  description
+                }
+              }
+            }
+        """
+        ToDo.objects.get(pk=todo_id).delete()
+        todo = ToDo.objects.all()
+        return ToDoCreateMutation(todo=todo)
 
 
 class Mutation(graphene.ObjectType):
-    update_todo = ToDoMutation.Field()
-
-
-
+    update_todo = ToDoUpdateMutation.Field()
+    create_todo = ToDoCreateMutation.Field()
+    delete_todo = ToDoDeleteMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
