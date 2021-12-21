@@ -7,15 +7,16 @@ const ToDoItem = ({todo, delete_todo}) => {
     } else {
         status = 'завершен'
     }
+    console.log(todo.project)
     return (
         <tr>
             <td>{todo.name}</td>
-            <td>{todo.project.name}</td>
+            <td>{todo.project}</td>
             <td>{todo.description}</td>
             <td>{todo.createDatetime}</td>
             <td>{todo.updateDatetime}</td>
-            <td>{todo.createdBy.username}</td>
-            <td>{todo.assignedTo.username}</td>
+            <td>{todo.createdBy}</td>
+            <td>{todo.assignedTo}</td>
             <td>{status}</td>
             <td>
                 <button onClick={() => delete_todo(todo.id)} type='button'>delete</button>
