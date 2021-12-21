@@ -6,7 +6,7 @@ from users.serializers import UserModelSerializer
 
 
 class ProjectModelSerializer(ModelSerializer):
-    working_group = UserModelSerializer(many=True)
+    # working_group = UserModelSerializer(many=True)
 
     class Meta:
         model = Project
@@ -14,9 +14,9 @@ class ProjectModelSerializer(ModelSerializer):
 
 
 class ToDoModelSerializer(ModelSerializer):
-    project = ProjectModelSerializer()
-    created_by = UserModelSerializer()
-    assigned_to = UserModelSerializer()
+    # project = ProjectModelSerializer()
+    # created_by = UserModelSerializer()
+    # assigned_to = UserModelSerializer()
 
     class Meta:
         model = ToDo

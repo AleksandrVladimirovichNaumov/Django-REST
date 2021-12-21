@@ -11,6 +11,8 @@ import NotFound from "./components/NotFound";
 import ProjectDetailsList from "./components/ProjectDetails";
 import LoginForm from "./components/LoginForm";
 import Cookies from "universal-cookie/lib";
+import ToDoForm from "./components/ToDoForm";
+import ProjectForm from "./components/ProjectForm";
 
 
 class App extends React.Component {
@@ -23,12 +25,15 @@ class App extends React.Component {
                 ['Users', '/users'],
                 ['Projects', '/projects'],
                 ['ToDos', '/todos'],
+                ['Create project', '/projects/create'],
+                ['Create ToDo', '/todos/create'],
             ],
             'footer_items': ['TODO ltd.', '2021'],
             'projects': [],
             'todos': [],
             'token': '',
-            'username': ''
+            'username': '',
+            'todo_project': {}
         }
     }
 
@@ -44,9 +49,31 @@ class App extends React.Component {
         })
     }
 
+    create_project(name, git_link, working_group) {
+        const headers = this.get_headers()
+
+        const data = {
+            name: name,
+            git_link: git_link,
+            working_group: working_group,
+
+        }
+
+
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers}).then(
+            response => {
+                this.load_data();
+            }
+        ).catch(error => {
+            console.log(error)
+
+        })
+
+    }
+
     delete_todo(id) {
         const headers = this.get_headers()
-        console.log(id)
+
         axios.delete(`http://127.0.0.1:8000/api/todos/${id}`, {headers}).then(
             response => {
                 this.load_data();
@@ -55,6 +82,75 @@ class App extends React.Component {
             console.log(error)
             this.setState({'projects': []})
         })
+    }
+
+
+    create_todo(name, description, project, created_by, assigned_to) {
+        const headers = this.get_headers()
+
+        //  с добавленными в сериалайзере
+        // project = ProjectModelSerializer()
+
+        // не получается отправить пост запрос на создание todo? так как включена информация ввиде объекта project
+        // я пытался отправлять запрос для получения объекта с инфой о проджекте и после получения ответа отправлять
+        // пост запрос на создание туду с включенным объектом проекта. получаю ошибку, хотя структура data в пост запросе такая же
+        // как и при гет запросе туду. почему - не смог разобраться. ниже код
+
+        // axios.get('http://127.0.0.1:8000/api/projects/1', {headers}).then(
+        //     response => {
+        //         const project = response.data
+        //         console.log(project)
+        //         this.setState(
+        //             {
+        //                 'todo_project': project
+        //             }
+        //         )
+        //
+        //
+        //         const data = {
+        //             name: name,
+        //             project: this.state.todo_project,
+        //             description: description,
+        //             // create_datetime: Date(),
+        //             // update_datetime: Date(),
+        //             created_by: 1,
+        //             assigned_to: 1,
+        //             is_active: true,
+        //         }
+        //         console.log(data)
+        //
+        //         axios.post(`http://127.0.0.1:8000/api/todos/`, data, {headers}).then(
+        //             response => {
+        //                 this.load_data();
+        //             }
+        //         ).catch(error => {
+        //             console.log(error)
+        //             this.setState({'projects': []})
+        //         })
+        //
+        //
+        //     })
+        const data = {
+            name: name,
+            project: project,
+            description: description,
+            // create_datetime: Date(),
+            // update_datetime: Date(),
+            created_by: created_by,
+            assigned_to: assigned_to,
+            is_active: true,
+        }
+
+
+        axios.post(`http://127.0.0.1:8000/api/todos/`, data, {headers}).then(
+            response => {
+                this.load_data();
+            }
+        ).catch(error => {
+            console.log(error)
+
+        })
+
     }
 
     set_token(token) {
@@ -203,15 +299,33 @@ class App extends React.Component {
 
                             <Switch>
                                 <Route exact path='/users' component={() => <UserList users={this.state.users}/>}/>
+
+
                                 <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}
                                                                      delete_project={(id) => this.delete_project(id)}/>}/>
-                                <Route exact path='/todos'
-                                       component={() => <ToDoList todos={this.state.todos}
-                                                                  delete_todo={(id) => this.delete_todo(id)}/>}/>
+
+                                <Route exact path='/projects/create' component={() =>
+                                    <ProjectForm
+                                        projects={this.state.projects}
+                                        users={this.state.users}
+                                        create_project={(name, git_link, working_group) => this.create_project(name, git_link, working_group)}/>}/>
+
                                 <Route path='/projects/details/:id'>
                                     <ProjectDetailsList projects={this.state.projects}/>
                                 </Route>
+
+
+
+                                <Route exact path='/todos'
+                                       component={() => <ToDoList todos={this.state.todos}
+                                                                  delete_todo={(id) => this.delete_todo(id)}/>}/>
+
+                                <Route exact path='/todos/create' component={() =>
+                                    <ToDoForm
+                                        projects={this.state.projects}
+                                        users={this.state.users}
+                                        create_todo={(name, description, project, created_by, assigned_to) => this.create_todo(name, description, project, created_by, assigned_to)}/>}/>
 
 
                                 {!this.is_auth()
@@ -220,8 +334,7 @@ class App extends React.Component {
                                     :
                                     <div className="div2"><span> You are logged as {this.state['username']}</span></div>
                                 }
-                                {/*<Route exact path='/login' component={() => <LoginForm*/}
-                                {/*    get_token={(username, password) => this.get_token(username, password)}/>}/>*/}
+
                                 <Redirect from='/' to='/users'/>
 
                                 <Route component={NotFound}/>
