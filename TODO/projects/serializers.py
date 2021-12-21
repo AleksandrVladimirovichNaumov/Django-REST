@@ -6,7 +6,6 @@ from users.serializers import UserModelSerializer
 
 
 class ProjectModelSerializer(ModelSerializer):
-
     working_group = UserModelSerializer(many=True)
 
     class Meta:
@@ -14,11 +13,7 @@ class ProjectModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-
-
-class ToDoModelSerializer(HyperlinkedModelSerializer):
-
-
+class ToDoModelSerializer(ModelSerializer):
     project = ProjectModelSerializer()
     created_by = UserModelSerializer()
     assigned_to = UserModelSerializer()

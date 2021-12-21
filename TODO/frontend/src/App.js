@@ -32,6 +32,31 @@ class App extends React.Component {
         }
     }
 
+    delete_project(id) {
+        const headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/projects/${id}`, {headers}).then(
+            response => {
+                this.load_data();
+            }
+        ).catch(error => {
+            console.log(error)
+            this.setState({'projects': []})
+        })
+    }
+
+    delete_todo(id) {
+        const headers = this.get_headers()
+        console.log(id)
+        axios.delete(`http://127.0.0.1:8000/api/todos/${id}`, {headers}).then(
+            response => {
+                this.load_data();
+            }
+        ).catch(error => {
+            console.log(error)
+            this.setState({'projects': []})
+        })
+    }
+
     set_token(token) {
         const cookie = new Cookies()
         cookie.set('token', token)
@@ -128,7 +153,6 @@ class App extends React.Component {
             response => {
                 this.set_token(response.data['token'])
                 this.set_username(username)
-                console.log(response.data)
 
             }
         ).catch(error => alert(error))
@@ -180,12 +204,14 @@ class App extends React.Component {
                             <Switch>
                                 <Route exact path='/users' component={() => <UserList users={this.state.users}/>}/>
                                 <Route exact path='/projects'
-                                       component={() => <ProjectList projects={this.state.projects}/>}/>
-                                <Route exact path='/todos' component={() => <ToDoList todos={this.state.todos}/>}/>
+                                       component={() => <ProjectList projects={this.state.projects}
+                                                                     delete_project={(id) => this.delete_project(id)}/>}/>
+                                <Route exact path='/todos'
+                                       component={() => <ToDoList todos={this.state.todos}
+                                                                  delete_todo={(id) => this.delete_todo(id)}/>}/>
                                 <Route path='/projects/details/:id'>
                                     <ProjectDetailsList projects={this.state.projects}/>
                                 </Route>
-
 
 
                                 {!this.is_auth()
