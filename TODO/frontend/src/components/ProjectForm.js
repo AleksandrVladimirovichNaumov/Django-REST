@@ -13,13 +13,16 @@ class ProjectForm extends React.Component {
 
     handleChange(event) {
         if (event.target.name === 'working_group') {
-            let value = this.state.working_group
-            value.push(event.target.value)
-            this.setState(
-                {
-                    [event.target.name]: value
-                }
-            )
+            let working_group = []
+            for (let i = 0; i<event.target.selectedOptions.length; i++) {
+                working_group.push(event.target.selectedOptions.item(i).value)
+
+                this.setState(
+                    {
+                        [event.target.name]: working_group
+                    }
+                )
+            }
         } else {
             this.setState(
                 {
@@ -64,7 +67,7 @@ class ProjectForm extends React.Component {
                     </p>
 
                     <p>Working group<br/>
-                        <select name="working_group"
+                        <select name="working_group" multiple
 
 
                                 onChange={(event) => this.handleChange(event)}>
