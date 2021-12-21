@@ -1,6 +1,34 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
+let input_text = ''
+
+class ProjectSearchForm extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    handleChange(event) {
+
+        input_text = event.target.value
+        this.setState(
+            {'project_name': input_text}
+        )
+        console.log(input_text)
+    }
+
+    handleSubmit(event) {
+        console.log(input_text)
+        console.log(this.props)
+        // this.props.project_search(input_text)
+        // this.props.create_todo(this.state.project_name)
+        event.preventDefault()
+    }
+}
+
+let project_search = new ProjectSearchForm()
+
+
 const ProjectItem = ({project, delete_project}) => {
 
     return (
@@ -19,25 +47,39 @@ const ProjectItem = ({project, delete_project}) => {
     )
 }
 
-const ProjectList = ({projects, delete_project}) => {
+const ProjectList = ({projects, delete_project, project_search_func}) => {
 
     return (
-        <table>
-            <th>Name</th>
-            <th>Git link</th>
-            <th>Members of working group</th>
-            <th>Delete</th>
+
+        <p>
+            <form onSubmit={(event) => project_search.handleSubmit(event)}>
+                <input type="text" name="project_name"
+                       placeholder="project name"
+                    // value={input_text}
+                       onChange={(event) => project_search.handleChange(event)}
+                />
+                <button onClick={() => project_search_func(input_text)} type='button'>search</button>
+                {/*<input type="submit" value="Search project by name"/>*/}
+            </form>
 
 
-            {projects.map((project) => <ProjectItem project={project} delete_project={delete_project}/>)}
+            <table>
+                <th>Name</th>
+                <th>Git link</th>
+                <th>Members of working group</th>
+                <th>Delete</th>
 
-            <th>Name</th>
-            <th>Git link</th>
-            <th>Members of working group</th>
-            <th>Delete</th>
+
+                {projects.map((project) => <ProjectItem project={project} delete_project={delete_project} project_search_func={project_search_func}/>)}
+
+                <th>Name</th>
+                <th>Git link</th>
+                <th>Members of working group</th>
+                <th>Delete</th>
 
 
-        </table>
+            </table>
+        </p>
     )
 }
 

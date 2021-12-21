@@ -24,7 +24,7 @@ from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from projects.views import ProjectModelViewSet, ToDoModelViewSet, ToDoFilterModelViewSet
+from projects.views import ProjectModelViewSet, ToDoModelViewSet, ToDoFilterModelViewSet, ProjectFilterModelViewSet
 # from users.views import UserModelViewSet
 from users.views import UserCustomViewSet, UserCustomViewSet2
 
@@ -47,6 +47,9 @@ router.register('todos', ToDoModelViewSet, basename='todo')
 router.register('users', UserCustomViewSet, basename='user')
 # router.register('after', ToDoFilterModelViewSet)
 
+
+router_search = DefaultRouter()
+router_search.register('project_name', ProjectFilterModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -72,5 +75,9 @@ urlpatterns = [
 
     # for graphene requests
     path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('', TemplateView.as_view(template_name='index.html')),
+
+    # for text search
+    path('filters/', include(router_search.urls))
 
 ]

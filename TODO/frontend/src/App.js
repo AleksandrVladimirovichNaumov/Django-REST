@@ -153,6 +153,10 @@ class App extends React.Component {
 
     }
 
+    project_search(project_name){
+        this.load_data(project_name)
+    }
+
     set_token(token) {
         const cookie = new Cookies()
         cookie.set('token', token)
@@ -176,7 +180,7 @@ class App extends React.Component {
 
     }
 
-    load_data() {
+    load_data(project_search='') {
         const headers = this.get_headers()
         axios.get('http://127.0.0.1:8000/api/users/', {headers}).then(
             response => {
@@ -192,22 +196,41 @@ class App extends React.Component {
             console.log(error)
             this.setState({'users': []})
         })
-        axios.get('http://127.0.0.1:8000/api/projects/', {headers}).then(
-            response => {
+        if(project_search==='') {
+            axios.get('http://127.0.0.1:8000/api/projects/', {headers}).then(
+                response => {
 
-                const projects = response.data
+                    const projects = response.data
 
 
-                this.setState(
-                    {
-                        'projects': projects
-                    }
-                )
-            }
-        ).catch(error => {
-            console.log(error);
-            this.setState({'projects': []})
-        })
+                    this.setState(
+                        {
+                            'projects': projects
+                        }
+                    )
+                }
+            ).catch(error => {
+                console.log(error);
+                this.setState({'projects': []})
+            })
+        }else{
+            axios.get(`http://127.0.0.1:8000/filters/project_name/?project_name=${project_search}`, {headers}).then(
+                response => {
+
+                    const projects = response.data
+
+
+                    this.setState(
+                        {
+                            'projects': projects
+                        }
+                    )
+                }
+            ).catch(error => {
+                console.log(error);
+                this.setState({'projects': []})
+            })
+        }
         axios.get('http://127.0.0.1:8000/api/todos/', {headers}).then(
             response => {
 
@@ -303,7 +326,8 @@ class App extends React.Component {
 
                                 <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}
-                                                                     delete_project={(id) => this.delete_project(id)}/>}/>
+                                                                     delete_project={(id) => this.delete_project(id)}
+                                                                     project_search_func={(project_name) => this.load_data(project_name)}/>}/>
 
                                 <Route exact path='/projects/create' component={() =>
                                     <ProjectForm
