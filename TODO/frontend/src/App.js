@@ -327,7 +327,7 @@ class App extends React.Component {
                                 <Route exact path='/projects'
                                        component={() => <ProjectList projects={this.state.projects}
                                                                      delete_project={(id) => this.delete_project(id)}
-                                                                     project_search_func={(project_name) => this.load_data(project_name)}/>}/>
+                                                                     project_search={(project_name) => this.load_data(project_name)}/>}/>
 
                                 <Route exact path='/projects/create' component={() =>
                                     <ProjectForm
@@ -336,7 +336,7 @@ class App extends React.Component {
                                         create_project={(name, git_link, working_group) => this.create_project(name, git_link, working_group)}/>}/>
 
                                 <Route path='/projects/details/:id'>
-                                    <ProjectDetailsList projects={this.state.projects}/>
+                                    <ProjectDetailsList projects={this.state.projects} users={this.state.users}/>
                                 </Route>
 
 

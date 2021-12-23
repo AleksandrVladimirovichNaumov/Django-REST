@@ -17,13 +17,13 @@ class ProjectSearchForm extends React.Component {
         console.log(input_text)
     }
 
-    handleSubmit(event) {
-        console.log(input_text)
-        console.log(this.props)
-        // this.props.project_search(input_text)
-        // this.props.create_todo(this.state.project_name)
-        event.preventDefault()
-    }
+    // handleSubmit(event) {
+    //     console.log(input_text)
+    //     console.log(this.props)
+    //     // this.props.project_search(input_text)
+    //     // this.props.create_todo(this.state.project_name)
+    //     event.preventDefault()
+    // }
 }
 
 let project_search = new ProjectSearchForm()
