@@ -33,7 +33,9 @@ const ProjectItem = ({project, delete_project}) => {
 
     return (
         <tr>
-            <td>{project.name}</td>
+            <td>
+                <Link to={`/projects/update/${project.id}`}>{project.name}</Link>
+            </td>
             <td>{project.git_link}</td>
             <td>
                 <Link to={`/projects/details/${project.id}`}> {project.working_group.length} member(s)</Link>

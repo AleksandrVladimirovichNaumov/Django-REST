@@ -13,6 +13,7 @@ import LoginForm from "./components/LoginForm";
 import Cookies from "universal-cookie/lib";
 import ToDoForm from "./components/ToDoForm";
 import ProjectForm from "./components/ProjectForm";
+import ProjectUpdateForm from "./components/ProjectUpdateForm";
 
 
 class App extends React.Component {
@@ -71,6 +72,28 @@ class App extends React.Component {
 
     }
 
+        update_project(id, name, git_link, working_group) {
+        const headers = this.get_headers()
+
+        const data = {
+            name: name,
+            git_link: git_link,
+            working_group: working_group,
+
+        }
+
+
+        axios.patch(`http://127.0.0.1:8000/api/projects/${id}/`, data, {headers}).then(
+            response => {
+                this.load_data();
+            }
+        ).catch(error => {
+            console.log(error)
+
+        })
+
+    }
+
     delete_todo(id) {
         const headers = this.get_headers()
 
@@ -83,6 +106,7 @@ class App extends React.Component {
             this.setState({'projects': []})
         })
     }
+
 
 
     create_todo(name, description, project, created_by, assigned_to) {
@@ -338,6 +362,13 @@ class App extends React.Component {
                                 <Route path='/projects/details/:id'>
                                     <ProjectDetailsList projects={this.state.projects} users={this.state.users}/>
                                 </Route>
+
+                                <Route exact path='/projects/update/:id' component={() =>
+                                    <ProjectUpdateForm
+                                        projects={this.state.projects}
+                                        users={this.state.users}
+                                        update_project={(id, name, git_link, working_group) => this.update_project(id, name, git_link, working_group)}/>}/>
+
 
 
 
