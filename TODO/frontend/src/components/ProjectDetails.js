@@ -2,38 +2,44 @@ import {Link, useParams} from "react-router-dom";
 import ProjectList from "./Project";
 
 
-const ProjectItem = ({project}) => {
-    console.log(project.working_group)
-    let working_group = []
-    for (let i = 0; i < project.working_group.length; i++) {
-        working_group.push(
+const ProjectItem = ({user}) => {
+    console.log(user)
+
+    let   working_group=
             <tr>
-                <td>{project.working_group[i].username}</td>
-                <td>{project.working_group[i].email}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
 
 
             </tr>
-        )
-    }
+
+
     return (
         working_group
     )
 }
 
 
-const ProjectDetailsList = ({projects}) => {
+const ProjectDetailsList = ({projects, users}) => {
 
     let {id} = useParams();
+    let working_group = [];
+    console.log(projects)
 
     let filtered_items = projects.filter(project => project.id == id);
-    console.log(filtered_items);
+    console.log(filtered_items)
+    for (let i=0; i<filtered_items[0].working_group.length; i++){
+        working_group.push(users.filter(user => user.id==filtered_items[0].working_group[i])[0])
+    }
+
+    console.log(working_group);
     return (
         <table>
             <th>Username</th>
             <th>Email</th>
 
 
-            {filtered_items.map((project) => <ProjectItem project={project}/>)}
+            {working_group.map((user) => <ProjectItem user = {user}/>)}
 
             <th>Username</th>
             <th>Email</th>
