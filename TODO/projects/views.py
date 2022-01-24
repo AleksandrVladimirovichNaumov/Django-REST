@@ -51,3 +51,8 @@ class ToDoFilterModelViewSet(ToDoModelViewSet):
         return ToDo.objects.filter(create_datetime__gte=after)
 
 # http://127.0.0.1:8000/filters/after/?after=2021-11-23%2011:51:41.243446
+
+class ProjectFilterModelViewSet(ProjectModelViewSet):
+    def get_queryset(self):
+        name = self.request.query_params.get('project_name')
+        return Project.objects.all().filter(name__contains=name)
