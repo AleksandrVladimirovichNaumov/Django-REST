@@ -40,6 +40,7 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+# роуты для апи
 router = DefaultRouter()
 # router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet, basename='project')
@@ -47,7 +48,7 @@ router.register('todos', ToDoModelViewSet, basename='todo')
 router.register('users', UserCustomViewSet, basename='user')
 # router.register('after', ToDoFilterModelViewSet)
 
-
+# роут для поиска проджектов на фронтенде
 router_search = DefaultRouter()
 router_search.register('project_name', ProjectFilterModelViewSet, basename='project_search')
 
